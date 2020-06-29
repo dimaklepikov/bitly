@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-load_dotenv()
 import requests
 import json
 import os
@@ -34,14 +33,10 @@ def count_clicks(bitlink):
   return clicks
 
 def main():
+  load_dotenv()
   parser = argparse.ArgumentParser()
   parser.add_argument("link")
   args = parser.parse_args()
-  
-  if 'bit.ly' in args.link:
-    bitl_clicks = count_clicks(args.link)
-    print('кол-во переходов по ссылке:', bitl_clicks)
-    return
   
   try:
     bitlink = shorten_the_link(args.link)
