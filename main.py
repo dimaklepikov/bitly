@@ -5,7 +5,7 @@ import os
 import argparse
 
 URL_TEMPLATE = 'https://api-ssl.bitly.com/v4/{}'
-BITLY_TOKEN = os.getenv("BITLY_TOKEN")
+
 
 def shorten_the_link(link):
   headers = {'Authorization': BITLY_TOKEN}
@@ -33,7 +33,6 @@ def count_clicks(bitlink):
   return clicks
 
 def main():
-  load_dotenv()
   parser = argparse.ArgumentParser()
   parser.add_argument("link")
   args = parser.parse_args()
@@ -52,7 +51,10 @@ def main():
       print('ссылка неверна')
 
 if __name__ == '__main__':
+  load_dotenv(dotenv_path='.env', verbose=True)
+  BITLY_TOKEN = os.getenv("BITLY_TOKEN")
   main()
+  
 
 
 
