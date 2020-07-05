@@ -39,18 +39,20 @@ def main():
   parser.add_argument("link")
   args = parser.parse_args()
   
-  try:
-    bitlink = shorten_the_link(args.link, bitly_token)
-    print(bitlink)
-  except requests.exceptions.HTTPError:
-    print('ссылка неверна')
-
   if 'bit.ly' in args.link:
     try:
       clicks_count = count_clicks(args.link, bitly_token)
       print('кол-во переходов по ссылке:', clicks_count)
     except requests.exceptions.HTTPError:
       print('ссылка неверна')
+
+  if 'bit.ly' not in args.link:
+    try:
+      bitlink = shorten_the_link(args.link, bitly_token)
+      print(bitlink)
+    except requests.exceptions.HTTPError:
+      print('ссылка неверна')
+
 
 if __name__ == '__main__':
   main()
