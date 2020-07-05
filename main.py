@@ -7,8 +7,8 @@ import argparse
 URL_TEMPLATE = 'https://api-ssl.bitly.com/v4/{}'
 
 
-def shorten_the_link(link):
-  headers = {'Authorization': BITLY_TOKEN}
+def shorten_the_link(link, bitly_token):
+  headers = {'Authorization': bitly_token}
   url = URL_TEMPLATE.format('shorten')
   body = { "long_url": link
   }
@@ -18,8 +18,8 @@ def shorten_the_link(link):
   bitlink = link_line["link"]
   return bitlink
 
-def count_clicks(bitlink):
-  headers = {'Authorization': BITLY_TOKEN}
+def count_clicks(bitlink, bitly_token):
+  headers = {'Authorization': bitly_token}
   
   params = {'unit': 'day', 'units':'-1',}
   url = "{}{}/clicks/summary".format(
@@ -33,26 +33,26 @@ def count_clicks(bitlink):
   return clicks
 
 def main():
+  load_dotenv(dotenv_path='.env', verbose=True)
+  bitly_token = os.getenv("BITLY_TOKEN")
   parser = argparse.ArgumentParser()
   parser.add_argument("link")
   args = parser.parse_args()
   
   try:
-    bitlink = shorten_the_link(args.link)
+    bitlink = shorten_the_link(args.link, bitly_token)
     print(bitlink)
   except requests.exceptions.HTTPError:
     print('ссылка неверна')
 
   if 'bit.ly' in args.link:
     try:
-      clicks_count = count_clicks(args.link)
+      clicks_count = count_clicks(args.link, bitly_token)
       print('кол-во переходов по ссылке:', clicks_count)
     except requests.exceptions.HTTPError:
       print('ссылка неверна')
 
 if __name__ == '__main__':
-  load_dotenv(dotenv_path='.env', verbose=True)
-  BITLY_TOKEN = os.getenv("BITLY_TOKEN")
   main()
   
 
